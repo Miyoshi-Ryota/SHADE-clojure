@@ -1,6 +1,8 @@
 # shade
 
 A Clojure library designed to optimize function by SHADE(Success-History Based Parameter Adaptation for Differential Evolution).
+This library's SHADE targets to minimize objective function which takes vector of continuous value then returns number.
+
 SHADE was proposed below a paper.
 
 `Tanabe, Ryoji, and Alex Fukunaga. "Success-history based parameter adaptation for differential evolution." In 2013 IEEE congress on evolutionary computation, pp. 71-78. IEEE, 2013.`
@@ -11,9 +13,49 @@ SHADE was proposed below a paper.
 As far as I know, SHADE is one of the best optimization algorithm for function optimization which means single objective 
 and continuous problems.
 
+
+
 ## Usage
 
-FIXME
+```clojure
+(ns your-ns.core
+  (:require [shade.core :as shade]))
+
+(defn rastrigin-function
+  [A theta x]
+  (let [n (count x)]
+    (+ (* A n)
+       (->> x
+            (map #(- (* %1 %1) (* A (Math/cos (* theta Math/PI %1)))))
+            (apply +)))))
+
+(def evaluate-function (partial rastrigin-function 10.0 2.0))
+
+(def population-size 50)
+(def max-generation 1000)
+
+;; A dimension of the solution.
+(def dimension-of-problem 2)
+
+;; A domain of the evaluate(objective) function.
+(def min-search-range -5)
+(def max-search-range 5)
+
+(def last-generation-population 
+  (shade/run population-size dimension-of-problem min-search-range max-search-range evaluate-function max-generation))
+
+(def best-solution (first (sort-by :shade.core/fitness last-generation-population)))
+(println best-solution)
+;; #:shade.core{:scaling-factor 0.9085399934900505, :improved-fitness 7.105427357601002E-15, :crossover-rate 0.7407592708749081, :fitness 0.0, :data (-5.490531981246176E-10 -6.889619712813397E-10)}
+
+(def best-solution-fitness (:shade.core/fitness best-solution))
+(println best-solution-fitness)
+;; 0.0
+
+(def best-solution-data (:shade.core/data best-solution))
+(println best-solution-data)
+;; (-5.490531981246176E-10 -6.889619712813397E-10)
+```
 
 ## License
 MIT License

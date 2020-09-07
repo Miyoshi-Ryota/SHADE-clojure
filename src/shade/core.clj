@@ -192,6 +192,12 @@
         (assoc memory-scaling-factor memory-index)))))
 
 (defn run
+  "optimize (minimize) `evaluate-function` by SHADE.
+  `population-size` is population-size.
+  `dimension` is dimension of solution.
+  `min_x` is a min domain of the problem (`evaluate-function`).
+  `max_x` is a max domain of the problem (`evaluate-function`).
+  `evaluate-function` is function which takes continuous values of `dimension` vector then returns number."
   [population-size dimension min_x max_x evaluate-function max_generation]
   (loop [population (initialize-population population-size dimension min_x max_x evaluate-function)
          generation 1
