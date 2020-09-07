@@ -7,7 +7,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [mrcsce/normal-distribution "0.1.0"]
                  [mrcsce/cauchy-distribution "0.1.0"]]
+  :repositories [["clojars" {:url "https://clojars.org/repo" :sign-releases false}]]
   :deploy-repositories [["releases" :clojars]
                         ["snapshots" :clojars]]
-  :dependencies [[org.clojure/clojure "1.10.1"]]
   :repl-options {:init-ns shade.core})
