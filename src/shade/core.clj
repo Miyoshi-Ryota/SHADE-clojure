@@ -1,17 +1,8 @@
 (ns shade.core
-  (:require [clojure.spec.alpha :as s])
-  (:require [normal-distribution.core :as n]
-            [clojure.set :as set]))
-
-"ToDo:
-* mfのアップデート方法とmcrのアップデート方法は本当は違うが、今回は同じにしてしまっているので治すこと
-* fのノイズもコーシー分布からとるようにすること
-"
-
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+  (:require [clojure.spec.alpha :as s]
+            [normal-distribution.core :as n]
+            [clojure.set :as set]
+            [cauchy-distribution.core :as c]))
 
 (defn- normalize
   "Normalize `target` number to between `translated_min` and `translated_max`"
@@ -115,17 +106,6 @@
        (take (int (* (count population) p)))
        (rand-nth)))
 
-(defn- rastrigin-function
-  [A theta x]
-  {:pre [(s/valid? (s/coll-of number?) x)
-         (s/valid? double? A)
-         (s/valid? double? theta)]
-   :post [(s/valid? (s/and double?) %)]}
-  (let [n (count x)]
-    (+ (* A n)
-       (->> x
-            (map #(- (* %1 %1) (* A (Math/cos (* theta Math/PI %1)))))
-            (apply +)))))
 
 (defn- mutation-one-gene
   [x x_r1 x_r2 x_pbest f]
@@ -167,7 +147,19 @@
   [n]
   {:pre [(s/valid? number? n)]
    :post [(s/valid? number? %)]}
-  (n/sample-normal-distribution n 0.1))
+  (let [noised-n (n/sample-normal-distribution n 0.1)]
+    (cond (>= noised-n 1) 1.0
+          (<= noised-n 0) 0.0
+          :else noised-n)))
+
+(defn- add-cauchy-noise
+  [n]
+  {:pre [(s/valid? number? n)]
+   :post [(s/valid? number? %)]}
+  (let [noised-n (c/sample-cauchy-distribution n 0.1)]
+    (cond (>= noised-n 1) 1.0
+          (<= noised-n 0) (add-cauchy-noise n)
+          :else noised-n)))
 
 (defn- update-memory-crossover-rate
   [memory-crossover-rate
@@ -191,9 +183,13 @@
     memory-scaling-factor
     (let [sum-of-improved (apply + improved-fitness)
           weight (map #(/ % sum-of-improved) improved-fitness)]
-      (->> (map #(* %1 %2) weight successful-scaling-factor)
-           (apply +)
-           (assoc memory-scaling-factor memory-index)))))
+      (->>
+        (/ (->> (map #(Math/pow %1 2) successful-scaling-factor)
+                (map #(* %1 %2) weight)
+                (apply +))
+           (->> (map #(* %1 %2) weight successful-scaling-factor)
+                (apply +)))
+        (assoc memory-scaling-factor memory-index)))))
 
 (defn run
   [population-size dimension min_x max_x evaluate-function max_generation]
@@ -205,7 +201,7 @@
       population
       (let [memory-index (mod generation 8)
             crossover-rates (repeatedly (partial add-gaussian-noise (nth memory-crossover-rate memory-index)))
-            scaling-factors (repeatedly (partial add-gaussian-noise (nth memory-scaling-factor memory-index)))
+            scaling-factors (repeatedly (partial add-cauchy-noise (nth memory-scaling-factor memory-index)))
             children (->> population
                           (map #(mutation %2 %1 population) scaling-factors)
                           (map #(crossover %1 %3 %2 evaluate-function) population crossover-rates))
@@ -218,5 +214,3 @@
             memory-scaling-factor (update-memory-scaling-factor memory-scaling-factor memory-index successful-scaling-factor improved-fitness)]
         (recur next-generation-population (inc generation) memory-crossover-rate memory-scaling-factor)))))
 
-
-(run 50 2 -5 5 (partial rastrigin-function 10.0 2.0) 1000)
