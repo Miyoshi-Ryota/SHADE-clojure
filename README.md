@@ -5,7 +5,7 @@ This library's SHADE targets to minimize objective function which takes vector o
 
 SHADE was proposed below a paper.
 
-`Tanabe, Ryoji, and Alex Fukunaga. "Success-history based parameter adaptation for differential evolution." In 2013 IEEE congress on evolutionary computation, pp. 71-78. IEEE, 2013.`
+`Ryoji Tanabe and Alex Fukunaga. "Success-history based parameter adaptation for differential evolution." In 2013 IEEE congress on evolutionary computation, pp. 71-78. IEEE, 2013.`
 
 [PDF of shade paper is here](https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=Success-history+based+parameter+adaptation+for+differential+evolution&btnG=)
 
