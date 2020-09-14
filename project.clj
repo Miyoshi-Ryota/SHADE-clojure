@@ -1,4 +1,4 @@
-(defproject mrcsce/shade "0.1.0"
+(defproject mrcsce/shade "0.1.1"
   :description "Clojure's implementation of SHADE(Success-History Based Parameter Adaptation for Differential Evolution).
   See also: https://github.com/Miyoshi-Ryota/SHADE-clojure"
   :url "https://github.com/Miyoshi-Ryota/SHADE-clojure"
