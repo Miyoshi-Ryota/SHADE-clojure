@@ -210,7 +210,7 @@
             scaling-factors (repeatedly (partial add-cauchy-noise (nth memory-scaling-factor memory-index)))
             children (->> population
                           (map #(mutation %2 %1 population) scaling-factors)
-                          (map #(crossover %1 %3 %2 evaluate-function) population crossover-rates))
+                          (pmap #(crossover %1 %3 %2 evaluate-function) population crossover-rates))
             next-generation-population (select-next-population population children)
             successful-children (set/difference (set next-generation-population) (set population))
             successful-crossover-rate (map ::crossover-rate successful-children)
