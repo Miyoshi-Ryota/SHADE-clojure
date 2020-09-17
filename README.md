@@ -1,4 +1,7 @@
 # shade
+[![Actions Status](https://github.com/Miyoshi-Ryota/SHADE-clojure/workflows/Test/badge.svg)](https://github.com/Miyoshi-Ryota/SHADE-clojure/actions)
+[![Actions Status](https://github.com/Miyoshi-Ryota/SHADE-clojure/workflows/Super-Linter/badge.svg)](https://github.com/Miyoshi-Ryota/SHADE-clojure/actions)
+[![Clojars Project](https://img.shields.io/clojars/v/mrcsce/shade.svg)](https://clojars.org/mrcsce/shade)
 
 A Clojure library designed to optimize function by SHADE(Success-History Based Parameter Adaptation for Differential Evolution).
 This library's SHADE targets to minimize objective function which takes vector of continuous value then returns number.
