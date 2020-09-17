@@ -10,8 +10,8 @@ SHADE was proposed below a paper.
 [PDF of shade paper is here](https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=Success-history+based+parameter+adaptation+for+differential+evolution&btnG=)
 
 
-As far as I know, SHADE is one of the best optimization algorithm for function optimization which means single objective 
-and continuous problems.
+As far as I know, SHADE is one of the best optimization
+algorithm for function optimization which means single objective and continuous problems.
 
 
 
@@ -41,7 +41,7 @@ and continuous problems.
 (def min-search-range -5)
 (def max-search-range 5)
 
-(def last-generation-population 
+(def last-generation-population
   (shade/run population-size dimension-of-problem min-search-range max-search-range evaluate-function max-generation))
 
 (def best-solution (first (sort-by :shade.core/fitness last-generation-population)))

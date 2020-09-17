@@ -1,5 +1,5 @@
 (ns shade.core-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :as t]
             [shade.core :as shade]
             [clojure.spec.alpha :as s]))
 
@@ -15,12 +15,12 @@
             (map #(- (* %1 %1) (* A (Math/cos (* theta Math/PI %1)))))
             (apply +)))))
 
-(deftest can-optimize-rastrigin-test
-  (testing "Test of that SHADE can optimize rastrigin function."
+(t/deftest can-optimize-rastrigin-test
+  (t/testing "Test of that SHADE can optimize rastrigin function."
     (let [last-population (shade/run 50 2 -5 5 (partial rastrigin-function 10.0 2.0) 1000)]
-      (is (= 0.0 (:shade.core/fitness (first (sort-by :shade.core/fitness last-population))))))))
+      (t/is (= 0.0 (:shade.core/fitness (first (sort-by :shade.core/fitness last-population))))))))
 
-(deftest can-optimize-high-dimension-rastrigin-test
-  (testing "Test of that SHADE can optimize high dimension rastrigin function."
+(t/deftest can-optimize-high-dimension-rastrigin-test
+  (t/testing "Test of that SHADE can optimize high dimension rastrigin function."
     (let [last-population (shade/run 50 15 -5 5 (partial rastrigin-function 10.0 2.0) 1000)]
-      (is (= 0.0 (:shade.core/fitness (first (sort-by :shade.core/fitness last-population))))))))
+      (t/is (= 0.0 (:shade.core/fitness (first (sort-by :shade.core/fitness last-population))))))))
